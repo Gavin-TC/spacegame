@@ -7,4 +7,10 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Assets\" />
+      <Folder Include="Input\" />
+      <Folder Include="Objects\NPCs\" />
+    </ItemGroup>
+
 </Project>
