@@ -8,7 +8,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Assets\" />
+      <Folder Include="Assets\Maps\Planets\" />
+      <Folder Include="Assets\Maps\Ships\" />
+      <Folder Include="Assets\Maps\Stations\" />
       <Folder Include="Input\" />
       <Folder Include="Objects\NPCs\" />
     </ItemGroup>
