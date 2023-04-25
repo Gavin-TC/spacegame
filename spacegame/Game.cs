@@ -1,49 +1,91 @@
 using System.Data;
 using System.Threading;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Security.Principal;
-using System.Threading.Channels;
+using System.Threading;
 using Spacegame.Graphics;
+using Spacegame.Objects;
 
 namespace Spacegame;
 
 class Game
 {
-    private Renderer renderer;
-    private Map gameMap;
+    private MapRenderer _mapRenderer;
+    private TextRenderer _textRenderer;
 
     private bool _gameRunning;
+    private bool _paused;
 
-    private int _width, _height = 10;
+    private static int _screenWidth = 20;
+    private static int _screenHeight = 15;
+    
+    private static int _textWidth = _screenWidth;
+    private static int _textHeight = 1;
+    
+    int playerX = 1;
+    int playerY = _screenHeight / 2;
+
+    private bool goBack = false;
+
+    public char[,] map = {
+        { '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#' },
+        { '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#' },
+        { '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#' },
+        { '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#' },
+        { '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#' },
+        { '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#' },
+        { '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#' },
+        { '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#' },
+        { '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#' },
+        { '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#' },
+        { '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#' },
+        { '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#' },
+        { '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#' },
+        { '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#' },
+        { '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#' }
+    };
 
     private void Initialize()
     {
         // Perform any game initialization tasks here
         // such as setting up game objects, loading assets, etc.
 
-        gameMap = new Map();
-        gameMap.InitializeMap(_width, _height);
+        _mapRenderer = new MapRenderer(_screenWidth, _screenHeight);
+        _textRenderer = new TextRenderer(_textWidth, _textHeight);
+
+        Console.CursorVisible = false;
 
         _gameRunning = true;  // Set the game to running state
     }
         
-    private void Update(double deltaTime)
+    private async void Update(double deltaTime)
     {
         // Update game state, handle input, etc.
+        
+        // Use Task.Run and await to check for user input asynchronously
+        
     }
         
     private void Render()
     {
         // Render the game screen, draw ASCII art, etc.
-        gameMap.Render();
+        _mapRenderer.Clear();
+        _mapRenderer.DrawMap(map); // Draw map to the screen buffer
+        _mapRenderer.DrawCharacter(playerX, playerY, '@'); // Draw player character at current position
+        _mapRenderer.RenderScreen(false);
+
+        _textRenderer.Clear();
+        _textRenderer.DrawText(0, 16, "playerX: " + playerX);
+        
     }
 
     public void Run()
     {
         Initialize();
 
-        int maxFPS = 5;
-        int maxUPS = 5;
+        int maxFPS = 10;
+        int maxUPS = 10;
 
         double fOptimalTime = 1_000 / maxFPS; // Optimal time to draw (1,000ms or 1 second divided by maxFPS/UPS)
         double uOptimalTime = 1_000 / maxUPS; // Optimal time to update
@@ -64,7 +106,11 @@ class Game
             uDeltaTime += (currentTime - startTime);
             startTime = currentTime;
 
-            if (uDeltaTime >= uOptimalTime)
+            
+            // <summary>
+            // If amount of time since last frame is the optimal time to update, then update.
+            // </summary>
+            if (uDeltaTime >= uOptimalTime && !_paused)
             {
                 Update(uDeltaTime);
 
@@ -75,6 +121,7 @@ class Game
 
             if (fDeltaTime >= fOptimalTime)
             {
+               
                 Render();
                 fDeltaTime -= fOptimalTime;
 
