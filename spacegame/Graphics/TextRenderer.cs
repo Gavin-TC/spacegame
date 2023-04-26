@@ -38,7 +38,7 @@ public class TextRenderer
 
     public void DrawText(int x, int y, string text)
     {
-        Console.SetCursorPosition(0, y);
+        Console.SetCursorPosition(x, y);
         Console.WriteLine(text);
     }
 }
