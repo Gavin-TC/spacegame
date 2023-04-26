@@ -1,6 +1,15 @@
-﻿namespace Spacegame.Input;
+﻿using static Spacegame.Game;
 
-public class DetectInput
+namespace Spacegame.Input
 {
-    
+    public class DetectInput
+    {
+        public void CheckInput()
+        {
+            while (true)
+            {
+                Console.ReadKey(true);
+            }
+        }
+    }
 }
