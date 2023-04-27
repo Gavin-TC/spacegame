@@ -18,11 +18,11 @@ namespace Spacegame
         private bool _gameRunning;
         private bool _paused;
 
-        private static int _screenWidth = 25;
-        private static int _screenHeight = 14;
+        private static int _screenWidth = 50;
+        private static int _screenHeight = 25;
 
-        private static int _textWidth = _screenWidth;
-        private static int _textHeight = 10;
+        private static int _textWidth = _screenWidth * 2; // Allows for double the screen width's amount of space;
+        private static int _textHeight = _screenHeight + 10; // Allows for 10 characters of free space BELOW the screen;
 
         int playerX = 1;
         int playerY = 5;
@@ -31,62 +31,20 @@ namespace Spacegame
 
         public char[,] map =
         {
-            {
-                '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█',
-                '█', '█', '█'
-            },
-            {
-                '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                ' ', ' ', '█'
-            },
-            {
-                '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                ' ', ' ', '█'
-            },
-            {
-                '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                ' ', ' ', '█'
-            },
-            {
-                '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                ' ', ' ', '█'
-            },
-            {
-                '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                ' ', ' ', '█'
-            },
-            {
-                '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                ' ', ' ', '█'
-            },
-            {
-                '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                ' ', ' ', '█'
-            },
-            {
-                '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                ' ', ' ', '█'
-            },
-            {
-                '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                ' ', ' ', '█'
-            },
-            {
-                '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                ' ', ' ', '█'
-            },
-            {
-                '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                ' ', ' ', '█'
-            },
-            {
-                '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                ' ', ' ', '█'
-            },
-            {
-                '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█',
-                '█', '█', '█'
-            }
+            { '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█' },
+            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
+            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
+            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
+            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
+            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
+            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
+            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
+            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
+            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
+            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
+            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
+            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
+            { '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█' }
         };
 
         private void Initialize()
@@ -96,7 +54,7 @@ namespace Spacegame
 
             _mapRenderer = new MapRenderer(_screenWidth, _screenHeight);
             _textRenderer = new TextRenderer(_textWidth, _textHeight);
-            _playerClass = new PlayerClass();
+            _playerClass = new PlayerClass(1000, 100, 0, 0);
 
             _playerClass.Initialize();
 
@@ -109,36 +67,24 @@ namespace Spacegame
         {
             // Update game state, handle input, etc.
 
-            if (playerX + 1 < _screenWidth - 2 && !goBack)
-            {
-                playerX += 1;
-            }
-            else
-            {
-                goBack = true;
-            }
-
-            if (playerX - 1 > 0 && goBack)
-            {
-                playerX -= 1;
-            }
-
-            if (playerX == 1)
-            {
-                goBack = false;
-            }
+            playerX = _playerClass.px;
+            playerY = _playerClass.py;
         }
 
         private void Render()
         {
             // Render the game screen, draw ASCII art, etc.
             _mapRenderer.Clear();
+            
             _mapRenderer.DrawMap(map); // Draw map to the screen buffer
             _mapRenderer.DrawCharacter(playerX, playerY, '@'); // Draw player character at current position
             _mapRenderer.RenderScreen(false);
 
+            
             _textRenderer.Clear();
+            
             _textRenderer.DrawText(0, 16, "playerX: " + playerX);
+            _textRenderer.DrawText(0, 17, "playerY: " + playerY);
             _textRenderer.DrawText(13, 16, "goBack: " + goBack);
 
         }
@@ -147,8 +93,8 @@ namespace Spacegame
         {
             Initialize();
 
-            int maxFPS = 10;
-            int maxUPS = 10;
+            int maxFPS = 30;
+            int maxUPS = 30;
 
             double fOptimalTime = 1_000 / maxFPS; // Optimal time to draw (1,000ms or 1 second divided by maxFPS/UPS)
             double uOptimalTime = 1_000 / maxUPS; // Optimal time to update
