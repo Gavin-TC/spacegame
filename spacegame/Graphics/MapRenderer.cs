@@ -20,21 +20,7 @@ public class MapRenderer
 
     public void Clear()
     {
-        // <summary>
-        // Sets console cursor the top left, so when next write happens it will overwrite
-        // what was already there instead of clearing it first
-        // </summary>
         Console.SetCursorPosition(0, 0);
-        
-        // Console.WriteLine("Clearing screen with clear void");
-        // for (var rows = 0; rows < screenHeight; rows++)
-        // {
-        //     for (var cols = 0; cols < screenWidth; cols++)
-        //     {
-        //         
-        //         characterBuffer[rows, cols] = ' ';
-        //     }
-        // }
     }
 
     // Set a character at x and y coordinate
