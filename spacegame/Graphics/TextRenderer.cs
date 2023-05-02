@@ -3,6 +3,8 @@ using System.Runtime.InteropServices;
 
 namespace Spacegame.Graphics;
 
+// fixme: CURRENTLY INCREDIBLY BROKEN
+
 public class TextRenderer
 {
     private char[,] characterBuffer; // 2D array to store ASCII characters
@@ -21,17 +23,32 @@ public class TextRenderer
     public void Clear()
     {
         // <summary>
-        // Sets console cursor the top left, so when next write happens it will overwrite
-        // what was already there instead of clearing it first
+        // Sets console cursor the top left, so when next write happens it will write over it
         // </summary>
         Console.SetCursorPosition(0, screenHeight+10); // screenHeight is initialized 10 'pixels' more than MapRenderer.screenHeight;
     }
 
     public void DrawText(int x, int y, string text)
     {
-        Console.SetCursorPosition(x, y);
-        
         // Janky way to do this, but the extra space clears any left over zeroes when subtracting a number...
-        Console.WriteLine(text + " "); 
+        y += screenHeight;
+        Console.SetCursorPosition(x, y);
+        Console.WriteLine(text);
+    }
+    
+    public void DrawText(int x, int y, char character, bool withQuote)
+    {
+        // Janky way to do this, but the extra space clears any left over zeroes when subtracting a number...
+        y += screenHeight;
+        Console.SetCursorPosition(x, y);
+
+        if (withQuote)
+        {
+            Console.WriteLine("'" + character + "'");
+        }
+        else
+        {
+            Console.WriteLine(character);
+        }
     }
 }
