@@ -26,7 +26,6 @@ public class MapRenderer
     // Set a character at x and y coordinate
     public void DrawCharacter(int x, int y, char character)
     {
-        
         if (x >= 0 && x < screenWidth && y >= 0 && y < screenHeight)
         {
             characterBuffer[y, x] = character;
