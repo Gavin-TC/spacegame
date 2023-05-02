@@ -6,6 +6,7 @@ using System.Security.Principal;
 using System.Threading;
 using Spacegame.Graphics;
 using Spacegame.Player;
+using Spacegame.Utilities;
 
 namespace Spacegame
 {
@@ -29,24 +30,6 @@ namespace Spacegame
 
         private bool goBack = false;
 
-        public char[,] map =
-        {
-            { '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█' },
-            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
-            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
-            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
-            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
-            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
-            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
-            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
-            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
-            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
-            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
-            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
-            { '█', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '█' },
-            { '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█', '█' }
-        };
-
         private void Initialize()
         {
             // Perform any game initialization tasks here
@@ -54,7 +37,7 @@ namespace Spacegame
 
             _mapRenderer = new MapRenderer(_screenWidth, _screenHeight);
             _textRenderer = new TextRenderer(_textWidth, _textHeight);
-            _playerClass = new PlayerClass(1000, 100, 0, 0);
+            _playerClass = new PlayerClass("Gavin", 1000, 100, 0, 0);
 
             _playerClass.Initialize();
 
@@ -76,17 +59,24 @@ namespace Spacegame
             // Render the game screen, draw ASCII art, etc.
             _mapRenderer.Clear();
             
-            _mapRenderer.DrawMap(map); // Draw map to the screen buffer
+            _mapRenderer.DrawMap(Global.currentMap); // Draw map to the screen buffer
             _mapRenderer.DrawCharacter(playerX, playerY, '@'); // Draw player character at current position
             _mapRenderer.RenderScreen(false);
 
             
             _textRenderer.Clear();
-            
+            // _textRenderer.DrawText(0, 16, "Name: " + _playerClass.playerName);
             _textRenderer.DrawText(0, 16, "playerX: " + playerX);
             _textRenderer.DrawText(0, 17, "playerY: " + playerY);
-            _textRenderer.DrawText(13, 16, "goBack: " + goBack);
+        }
 
+        private void TestRender()
+        {
+            _mapRenderer.Clear();
+            _mapRenderer.DrawMap(Global.currentMap); // Draw map to the screen buffer
+            _mapRenderer.RenderScreen(false);
+            
+            _textRenderer.DrawText(0, 16, Global.currentMap[14, 0], true);
         }
 
         public void Run()
@@ -130,8 +120,8 @@ namespace Spacegame
 
                 if (fDeltaTime >= fOptimalTime)
                 {
-
                     Render();
+                    // TestRender();
                     fDeltaTime -= fOptimalTime;
 
                     frames += 1;
