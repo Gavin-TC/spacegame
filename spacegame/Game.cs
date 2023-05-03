@@ -25,7 +25,7 @@ namespace Spacegame
         private static int _textWidth = _screenWidth * 2; // Allows for double the screen width's amount of space;
         private static int _textHeight = _screenHeight + 10; // Allows for 10 characters of free space BELOW the screen;
 
-        int playerX = 1;
+        int playerX = 5;
         int playerY = 5;
 
         private bool goBack = false;
@@ -37,11 +37,13 @@ namespace Spacegame
 
             _mapRenderer = new MapRenderer(_screenWidth, _screenHeight);
             _textRenderer = new TextRenderer(_textWidth, _textHeight);
-            _playerClass = new PlayerClass("Gavin", 1000, 100, 0, 0);
-
+            _playerClass = new PlayerClass("Gavin", 1, 100, 0, 0);
+            
+            // Initialize classes
             _playerClass.Initialize();
 
             Console.CursorVisible = false;
+            Console.SetWindowSize(100, 35); // Windows only
 
             _gameRunning = true; // Set the game to running state
         }
@@ -49,9 +51,20 @@ namespace Spacegame
         private async void Update(double deltaTime)
         {
             // Update game state, handle input, etc.
-
+            
+            // Player updates goes under here
             playerX = _playerClass.px;
             playerY = _playerClass.py;
+
+            _playerClass.Update(deltaTime);
+
+            // <summary>
+            // Anything that needs to update that isn't the player goes here
+            // </summary>
+            if (!_playerClass.interactState) 
+            {
+                
+            }
         }
 
         private void Render()
@@ -61,19 +74,25 @@ namespace Spacegame
             
             _mapRenderer.DrawMap(Global.currentMap); // Draw map to the screen buffer
             _mapRenderer.DrawCharacter(playerX, playerY, '@'); // Draw player character at current position
+            //_playerClass.Render();
             _mapRenderer.RenderScreen(false);
+            //_playerClass.Render();
 
             
-            _textRenderer.Clear();
+            //_textRenderer.Clear();
             // _textRenderer.DrawText(0, 16, "Name: " + _playerClass.playerName);
-            _textRenderer.DrawText(0, 16, "playerX: " + playerX);
-            _textRenderer.DrawText(0, 17, "playerY: " + playerY);
+            // _textRenderer.DrawText(0, 16, "playerX: " + playerX);
+            // _textRenderer.DrawText(0, 17, "playerY: " + playerY);
+            
+            //_textRenderer.DrawText(0, 0, "going right: " + _playerClass.dirX);
+            //_textRenderer.DrawText(0, 1, "going up: " + _playerClass.dirY);
         }
 
         private void TestRender()
         {
             _mapRenderer.Clear();
             _mapRenderer.DrawMap(Global.currentMap); // Draw map to the screen buffer
+            _mapRenderer.DrawCharacter(playerX, playerY, _playerClass.playerChar); // Draw player character at current position
             _mapRenderer.RenderScreen(false);
             
             _textRenderer.DrawText(0, 16, Global.currentMap[14, 0], true);

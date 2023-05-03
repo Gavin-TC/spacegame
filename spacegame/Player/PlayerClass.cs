@@ -8,17 +8,19 @@ namespace Spacegame.Player
     {
         private HandleInput? _handleInput;
 
-        public int px; // Player left and right coordinate
-        public int py;
+        public int px { get; set; } // Player left and right coordinate
+        public int py { get; set; }
 
         // public int dirX; // Player direction up and down
         // public int dirY;
 
-        public bool goingRight;
-        public bool goingUp;
+        public int dirX = 0;
+        public int dirY = 0;
         
         public char playerChar;
         public string playerName;
+
+        public bool interactState = false;
         
         public int speed { get; set; }
 
@@ -47,67 +49,77 @@ namespace Spacegame.Player
             inputThread.Start();
         }
 
+        public (int px, int py) Position()
+        {
+            return (px, py);
+        }
+
         public void OnInput(ConsoleKey key)
         {
+            
+            
             //Console.WriteLine("PRESSING KEY " + key);
             switch (key)
             {
                 case ConsoleKey.W:
-                    goingUp = true;
-                    if (!CheckWall(true))
-                    {
-                        py -= 1;
-                    }
+                    dirY = -1;
+                    // if (!Obstruction(true))
+                    // {
+                    //     py -= 1;
+                    // }
                     break;
                 
                 case ConsoleKey.S:
-                    goingUp = false;
-                    if (!CheckWall(true))
-                    {
-                        py += 1;
-                    }
+                    dirY = 1;
+                    // if (!Obstruction(true))
+                    // {
+                    //     py += 1;
+                    // }
                     break;
                 
                 case ConsoleKey.D:
-                    goingRight = true;
-                    if (!CheckWall(false))
-                    {
-                        px += 1;
-                    }
+                    dirX = 1;
+                    // if (!Obstruction(false))
+                    // {
+                    //     px += 1;
+                    // }
                     break;
                 
                 case ConsoleKey.A:
-                    goingRight = false;
-                    if (!CheckWall(false))
-                    {
-                        px -= 1;
-                    }
+                    dirX = -1;
+                    // if (!Obstruction(false))
+                    // {
+                    //     px -= 1;
+                    // }
                     break;
                 
                 case ConsoleKey.E: // interact;
+                    interactState = !interactState;
                     break;
             }
+
+            
 
 
             // This doesn't work, continues to read input and delays it, so you keep moving becuase you've held the key.
             //Thread.Sleep(speed);
         }
         
-        public bool CheckWall(bool checkUp)
+        public bool Obstruction()
         {
-            if (checkUp)
+            if (dirY is -1 or 1)
             {
-                if (goingUp && Global.currentMap[py - 1, px] == Global.wallChar
-                    || !goingUp && Global.currentMap[py + 1, px] == Global.wallChar)
+                if (dirY == -1 && Global.currentMap[py - 1, px] is Global.wallChar or Global.closedDoorChar
+                    || dirY == 1 && Global.currentMap[py + 1, px] is Global.wallChar or Global.closedDoorChar)
                 {
                     return true;
                 }
             }
 
-            if (!checkUp)
+            if (dirX is -1 or 1)
             {
-                if (goingRight && Global.currentMap[py, px + 1] == Global.wallChar
-                    || !goingRight && Global.currentMap[py, px - 1] == Global.wallChar)
+                if (dirX == 1 && Global.currentMap[py, px + 1] is Global.wallChar or Global.closedDoorChar
+                    || dirX == -1 && Global.currentMap[py, px - 1] is Global.wallChar or Global.closedDoorChar)
                 {
                     return true;
                 }
@@ -115,29 +127,40 @@ namespace Spacegame.Player
 
             return false;
         }
+        
+        // _mapRenderer.DrawCharacter(playerX, playerY, '@'); // Draw player character at current position
 
-        public char Above()
+        public void Movement()
         {
-            return Global.currentMap[px, py - 1];
+            // Move player based on input
+            if (dirY == -1 && !Obstruction())
+            {
+                py--;
+            }
+            if (dirY == 1 && !Obstruction())
+            {
+                py++;
+            }
+            if (dirX == 1 && !Obstruction())
+            {
+                px++;
+            }
+            if (dirX == -1 && !Obstruction())
+            {
+                px--;
+            }
         }
 
-        public char Below()
+        public void Render()
         {
-            return Global.currentMap[px, py + 1];
-        }
-
-        public char Right()
-        {
-            return Global.currentMap[px + 1, py];
-        }
-
-        public char Left()
-        {
-            return Global.currentMap[px - 1, py];
+            Global.currentMap[py, px] = playerChar;
         }
         
         public void Update(double deltaTime)
         {
+            Movement();
+            dirX = 0;
+            dirY = 0;
         }
     }
 }
