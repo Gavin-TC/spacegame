@@ -43,7 +43,7 @@ namespace Spacegame
             _playerClass.Initialize();
 
             Console.CursorVisible = false;
-            Console.SetWindowSize(100, 35); // Windows only
+            //Console.SetWindowSize(100, 35); // Windows only
 
             _gameRunning = true; // Set the game to running state
         }
