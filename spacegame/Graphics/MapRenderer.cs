@@ -47,13 +47,8 @@ public class MapRenderer
         }
     }
 
-    public void RenderScreen(bool clearScreen)
+    public void RenderScreen()
     {
-        if (clearScreen)
-        {
-            Console.Clear();
-        }
-        
         for (var rows = 0; rows < screenHeight; rows++)
         {
             for (var cols = 0; cols < screenWidth; cols++)
