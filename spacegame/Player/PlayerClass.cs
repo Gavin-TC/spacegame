@@ -158,7 +158,10 @@ namespace Spacegame.Player
         
         public void Update(double deltaTime)
         {
-            Movement();
+            if (interactState)
+            {
+                Movement();
+            }
             dirX = 0;
             dirY = 0;
         }
