@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Runtime.InteropServices;
+using Spacegame.Utilities;
 
 namespace Spacegame.Graphics;
 
@@ -25,13 +26,13 @@ public class TextRenderer
         // <summary>
         // Sets console cursor the top left, so when next write happens it will write over it
         // </summary>
-        Console.SetCursorPosition(0, screenHeight+10); // screenHeight is initialized 10 'pixels' more than MapRenderer.screenHeight;
+        Console.SetCursorPosition(0, screenHeight); // screenHeight is initialized 10 'pixels' more than MapRenderer.screenHeight;
     }
 
     public void DrawText(int x, int y, string text)
     {
         // Janky way to do this, but the extra space clears any left over zeroes when subtracting a number...
-        y += screenHeight;
+        y += Global.currentMap.GetLength(0);
         Console.SetCursorPosition(x, y);
         Console.WriteLine(text);
     }
@@ -39,7 +40,7 @@ public class TextRenderer
     public void DrawText(int x, int y, char character, bool withQuote)
     {
         // Janky way to do this, but the extra space clears any left over zeroes when subtracting a number...
-        y += screenHeight;
+        y += Global.currentMap.GetLength(0);
         Console.SetCursorPosition(x, y);
 
         if (withQuote)
