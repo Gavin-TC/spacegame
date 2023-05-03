@@ -25,9 +25,9 @@ namespace Spacegame
         private static int _textWidth = _screenWidth * 2; // Allows for double the screen width's amount of space;
         private static int _textHeight = _screenHeight + 10; // Allows for 10 characters of free space BELOW the screen;
 
-        int playerX = 5;
-        int playerY = 5;
-
+        private int playerX = 12;
+        private int playerY = 5;
+        
         private bool goBack = false;
 
         private void Initialize()
@@ -44,6 +44,7 @@ namespace Spacegame
 
             Console.CursorVisible = false;
             //Console.SetWindowSize(100, 35); // Windows only
+            Console.SetWindowSize(100, 35); // Windows only
 
             _gameRunning = true; // Set the game to running state
         }
@@ -79,6 +80,14 @@ namespace Spacegame
             //_playerClass.Render();
 
             
+            //_mapRenderer.DrawMap(Global.currentMap); // Draw map to the screen buffer
+            //_mapRenderer.DrawCharacter(playerX, playerY, '@'); // Draw player character at current position
+            
+            _cameraClass.Draw(Global.currentMap, _mapRenderer);
+            //_mapRenderer.RenderScreen(false);
+
+
+
             //_textRenderer.Clear();
             // _textRenderer.DrawText(0, 16, "Name: " + _playerClass.playerName);
             // _textRenderer.DrawText(0, 16, "playerX: " + playerX);
@@ -92,7 +101,11 @@ namespace Spacegame
         {
             _mapRenderer.Clear();
             _mapRenderer.DrawMap(Global.currentMap); // Draw map to the screen buffer
+
             _mapRenderer.DrawCharacter(playerX, playerY, _playerClass.playerChar); // Draw player character at current position
+
+            //_mapRenderer.DrawCharacter(playerX, playerY, _playerClass.playerChar); // Draw player character at current position
+
             _mapRenderer.RenderScreen(false);
             
             _textRenderer.DrawText(0, 16, Global.currentMap[14, 0], true);
