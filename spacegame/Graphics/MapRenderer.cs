@@ -1,5 +1,6 @@
 using System.Data;
 using System.Runtime.InteropServices;
+using Spacegame.Utilities;
 
 namespace Spacegame.Graphics;
 
@@ -44,6 +45,26 @@ public class MapRenderer
                 char tileChar = map[row, col];
                 DrawCharacter(col, row, tileChar);
             }
+        }
+    }
+    
+    public void DrawMap(int mapWidth, int mapHeight, char map)
+    {
+        for (int row = 0; row < mapHeight; row++)
+        {
+            for (int col = 0; col < mapWidth; col++)
+            {
+                char tileChar = Global.currentMap[row, col];
+                DrawCharacter(col, row, tileChar);
+            }
+        }
+    }
+
+    public void DrawMap(int x, int y, char[,] map)
+    {
+        if (x >= 0 && x < screenWidth && y >= 0 && y < screenHeight)
+        {
+            characterBuffer[y, x] = map[y, x];
         }
     }
 
