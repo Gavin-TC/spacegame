@@ -158,7 +158,7 @@ namespace Spacegame.Player
         
         public void Update(double deltaTime)
         {
-            if (interactState)
+            if (!interactState)
             {
                 Movement();
             }
