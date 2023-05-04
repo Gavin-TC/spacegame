@@ -7,4 +7,5 @@ public class Quest
     public bool isCompleted { get; set; }
     public int experienceReward { get; set; }
     public int creditReward { get; set; }
+    public Dictionary<string, int> itemReward { get; set; }
 }

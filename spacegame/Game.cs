@@ -1,11 +1,7 @@
-using System.Data;
-using System.Threading;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Security.Principal;
-using System.Threading;
 using Spacegame.Graphics;
-using Spacegame.Player;
+using Spacegame.Objects.NPCs;
+using Spacegame.PlayerStuff;
 using Spacegame.Utilities;
 
 namespace Spacegame
@@ -17,25 +13,25 @@ namespace Spacegame
 
         private MapRenderer _mapRenderer;
         private TextRenderer _textRenderer;
-        private PlayerClass _playerClass;
+        private Dummy _dummyClass;
+        private Player _player;
         private Camera _cameraClass;
 
         private bool _gameRunning;
         private bool _paused;
 
-        private static int _screenWidth = 50;
-        private static int _screenHeight = 25;
 
         private static int _cameraWidth = 30;
         private static int _cameraHeight = 18;
+        
+        private static int _screenWidth = _cameraWidth;
+        private static int _screenHeight = _cameraHeight;
 
-        private static int _textWidth = _screenWidth * 2; // Allows for double the screen width's amount of space;
-        private static int _textHeight = _screenHeight + 10; // Allows for 10 characters of free space BELOW the screen;
+        private static int _textWidth = _cameraWidth + 10; // Allows for double the screen width's amount of space;
+        private static int _textHeight = _cameraHeight + 20; // Allows for 10 characters of free space BELOW the screen;
 
         private int playerX;
         private int playerY;
-        
-        private bool goBack = false;
 
         private void Initialize()
         {
@@ -44,35 +40,44 @@ namespace Spacegame
 
             _mapRenderer = new MapRenderer(_screenWidth, _screenHeight);
             _textRenderer = new TextRenderer(_textWidth, _textHeight);
+
+            _dummyClass = new Dummy(10, 10);
             
-            _playerClass = new PlayerClass("Gavin", 1000, 100, 0, 0);
-            _cameraClass = new Camera(0, 0, _cameraWidth, _cameraHeight, Global.currentMap.GetLength(1), Global.currentMap.GetLength(0));
+            _player = new PlayerStuff.Player("Gavin", 1000, 100, 0, 0);
+            _cameraClass = new Camera(1, 1, _cameraWidth, _cameraHeight, Global.currentMap.GetLength(1), Global.currentMap.GetLength(0));
             
             // Initialize classes
-            _playerClass.Initialize();
-            _cameraClass.Initialize(_playerClass);
+            _player.Initialize();
+            _cameraClass.Initialize(_player);
 
             // Anything console related
             Console.CursorVisible = false;
-            Console.SetWindowSize(_cameraWidth+1, _cameraHeight+1);
+
+            // Looks weird
+            //Console.ForegroundColor = ConsoleColor.Gray;
+
+            // This is a windows only feature and doesn't compile/work on other OS's
+            //Console.SetWindowSize(_cameraWidth+1, _cameraHeight+1);
 
             _gameRunning = true; // Set the game to running state
         }
 
-        private async void Update(double deltaTime)
+        private void Update(double deltaTime)
         {
             // Update game state, handle input, etc.
 
-            playerX = _playerClass.px;
-            playerY = _playerClass.py;
+            playerX = _player.px;
+            playerY = _player.py;
 
-            _playerClass.Update(deltaTime);
-            _cameraClass.Update(_playerClass);
+            _player.Update(deltaTime);
+            _cameraClass.Update(_player);
+            
+            _dummyClass.MoveY(4);
 
             // <summary>
             // Anything that needs to update that isn't the player goes here
             // </summary>
-            if (!_playerClass.interactState) 
+            if (!_player.interactState) 
             {
                 
             }
@@ -81,45 +86,30 @@ namespace Spacegame
         private void Render()
         {
             // Render the game screen, draw ASCII art, etc.
+            _cameraClass.Draw(Global.currentMap, _player, _mapRenderer);
+            
             _mapRenderer.Clear();
-            
-            //_mapRenderer.DrawMap(Global.currentMap); // Draw map to the screen buffer
-            //_mapRenderer.DrawCharacter(playerX, playerY, '@'); // Draw player character at current position
-            //_mapRenderer.RenderScreen();
-
-            
-            //_textRenderer.Clear();
-            // _textRenderer.DrawText(0, 16, "Name: " + _playerClass.playerName);
-            //_textRenderer.DrawText(0, 16, "playerX: " + playerX);
-            //_textRenderer.DrawText(0, 17, "playerY: " + playerY);
-            
-            //_mapRenderer.DrawMap(Global.currentMap); // Draw map to the screen buffer
-            //_mapRenderer.DrawCharacter(playerX, playerY, '@'); // Draw player character at current position
-            
-            _cameraClass.Draw(Global.currentMap, _playerClass);
-            //_mapRenderer.RenderScreen(false);
-
-
-
-            //_textRenderer.Clear();
-            // _textRenderer.DrawText(0, 16, "Name: " + _playerClass.playerName);
-            // _textRenderer.DrawText(0, 16, "playerX: " + playerX);
-            // _textRenderer.DrawText(0, 17, "playerY: " + playerY);
-
-            //_textRenderer.DrawText(0, 0, "going right: " + _playerClass.dirX);
-            //_textRenderer.DrawText(0, 1, "going up: " + _playerClass.dirY);
-        }
-
-        private void TestRender()
-        {
-            _mapRenderer.Clear();
-            _mapRenderer.DrawMap(Global.currentMap); // Draw map to the screen buffer
-            
-            //_mapRenderer.DrawCharacter(playerX, playerY, _playerClass.playerChar); // Draw player character at current position
+            _mapRenderer.DrawMap(_cameraClass);
+            _mapRenderer.DrawCharacter(_dummyClass.x, _dummyClass.y, 'D');
             _mapRenderer.RenderScreen();
             
-            _textRenderer.DrawText(0, 16, Global.currentMap[14, 0], true);
+            
+            //_textRenderer.Clear();
+
+            //_playerClass.Inventory.GetItems();
+            
+            // _textRenderer.WriteText(0, 0, "Current quest: ");
+            // if (_player.interactState)
+            // {
+            //     Console.WriteLine();
+            //     _textRenderer.WriteText(_cameraWidth + 1, -_cameraHeight - 1, "Interact mode");
+            // }
+            // else
+            // {
+            //     _textRenderer.WriteText(_cameraWidth + 1, -_cameraHeight - 1, "             ");
+            // }
         }
+        
 
         public void Run()
         {
@@ -159,29 +149,26 @@ namespace Spacegame
 
                     uDeltaTime -= uOptimalTime;
 
-                    updates += 1;
+                    //updates += 1;
                 }
 
                 if (fDeltaTime >= fOptimalTime)
                 {
                     Render();
-                    // TestRender();
 
-                    if (frameCount >= 30)
+                    if (frameCount >= maxFPS)
                     {
-                        
-                        
                         frameCount = 0;
                     }
                     
                     fDeltaTime -= fOptimalTime;
-
-                    frames += 1;
+                    //frames += 1;
                 }
                 
                 Console.CursorVisible = false;
 
                 frameCount++;
+                
 
                 // if (fpsTimer.ElapsedMilliseconds >= 1000)
                 // {

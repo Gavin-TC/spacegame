@@ -1,61 +1,142 @@
-using System.Data;
-using System.Runtime.InteropServices;
+using System;
+using Spacegame.Utilities;
 
-namespace Spacegame.Graphics;
-
-public class MapRenderer
+namespace Spacegame.Graphics
 {
-    private char[,] characterBuffer; // 2D array to store ASCII characters
-    private int screenWidth; // Screen width in columns
-    private int screenHeight; // Screen height in rows
-
-    public MapRenderer(int screenWidth, int screenHeight)
+    public class MapRenderer
     {
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
+        private char[,] characterBuffer; // 2D array to store ASCII characters
+        private int screenWidth; // Screen width in columns
+        private int screenHeight; // Screen height in rows
+        private Camera camera;
 
-        characterBuffer = new char[screenHeight, screenWidth];
-        Clear();
-    }
-
-    public void Clear()
-    {
-        Console.SetCursorPosition(0, 0);
-    }
-
-    // Set a character at x and y coordinate
-    public void DrawCharacter(int x, int y, char character)
-    {
-        if (x >= 0 && x < screenWidth && y >= 0 && y < screenHeight)
+        public MapRenderer(int screenWidth, int screenHeight)
         {
-            characterBuffer[y, x] = character;
+            this.screenWidth = screenWidth;
+            this.screenHeight = screenHeight;
+
+            characterBuffer = new char[screenHeight, screenWidth];
+            Clear();
         }
-    }
-    
-    public void DrawMap(char[,] map)
-    {
-        int mapWidth = map.GetLength(1);
-        int mapHeight = map.GetLength(0);
 
-        for (int row = 0; row < mapHeight; row++)
+        public void Clear()
         {
-            for (int col = 0; col < mapWidth; col++)
+            Console.SetCursorPosition(0, 0);
+            for (int i = 0; i < screenHeight; i++)
             {
-                char tileChar = map[row, col];
-                DrawCharacter(col, row, tileChar);
+                for (int j = 0; j < screenWidth; j++)
+                {
+                    characterBuffer[i, j] = ' ';
+                }
             }
         }
-    }
 
-    public void RenderScreen()
-    {
-        for (var rows = 0; rows < screenHeight; rows++)
+        // Set a character at x and y coordinate
+        public void DrawCharacter(int x, int y, char character)
         {
-            for (var cols = 0; cols < screenWidth; cols++)
+            if (x >= 0 && x < screenWidth && y >= 0 && y < screenHeight)
             {
-                Console.Write(characterBuffer[rows, cols]);
+                characterBuffer[y, x] = character;
             }
-            Console.WriteLine();
+        }
+
+        // Draw the map using the camera
+        public void DrawMap(Camera camera)
+        {
+            this.camera = camera;
+            for (int row = 0; row < camera.Height; row++)
+            {
+                for (int col = 0; col < camera.Width; col++)
+                {
+                    int mapX = camera.X + col;
+                    int mapY = camera.Y + row;
+
+                    // Only draw characters that are within the bounds of the map
+                    if (mapX >= 0 && mapX < Global.currentMap.GetLength(1) &&
+                        mapY >= 0 && mapY < Global.currentMap.GetLength(0))
+                    {
+                        char tileChar = Global.currentMap[mapY, mapX];
+                        DrawCharacter(col, row, tileChar);
+                    }
+                }
+            }
+        }
+
+        public void RenderScreen()
+        {
+            for (var rows = 0; rows < screenHeight; rows++)
+            {
+                for (var cols = 0; cols < screenWidth; cols++)
+                {
+                    Console.Write(characterBuffer[rows, cols]);
+                }
+                Console.WriteLine();
+            }
         }
     }
 }
+
+
+// using System.Data;
+// using System.Runtime.InteropServices;
+// using Spacegame.Utilities;
+//
+// namespace Spacegame.Graphics;
+//
+// public class MapRenderer
+// {
+//     private char[,] characterBuffer; // 2D array to store ASCII characters
+//     private int screenWidth; // Screen width in columns
+//     private int screenHeight; // Screen height in rows
+//     
+//     int mapWidth = Global.currentMap.GetLength(1);
+//     int mapHeight = Global.currentMap.GetLength(0);
+//
+//     public MapRenderer(int screenWidth, int screenHeight)
+//     {
+//         this.screenWidth = screenWidth;
+//         this.screenHeight = screenHeight;
+//
+//         characterBuffer = new char[screenHeight, screenWidth];
+//         Clear();
+//     }
+//
+//     public void Clear()
+//     {
+//         Console.SetCursorPosition(0, 0);
+//     }
+//
+//     // Set a character at x and y coordinate
+//     public void DrawCharacter(int x, int y, char character)
+//     {
+//         if (x >= 0 && x < mapWidth && y >= 0 && y < mapHeight)
+//         {
+//             characterBuffer[y, x] = character;
+//         }
+//     }
+//     
+//     public void DrawMap()
+//     {
+//         for (int row = 0; row < mapHeight; row++)
+//         {
+//             for (int col = 0; col < mapWidth; col++)
+//             {
+//                 char tileChar = Global.currentMap[row, col];
+//                 DrawCharacter(col, row, tileChar);
+//             }
+//         }
+//     }
+//
+//     public void RenderScreen()
+//     {
+//         Console.SetCursorPosition(0, 0);
+//         for (var rows = 0; rows < screenHeight; rows++)
+//         {
+//             for (var cols = 0; cols < screenWidth; cols++)
+//             {
+//                 Console.Write(characterBuffer[rows, cols]);
+//             }
+//             Console.WriteLine();
+//         }
+//     }
+// }

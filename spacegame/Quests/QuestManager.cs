@@ -16,6 +16,7 @@ public class QuestManager
         _completedQuests.Add(quest);
         
         // Add rewards below
+        
     }
 
     public IEnumerable<Quest> GetActiveQuests()
