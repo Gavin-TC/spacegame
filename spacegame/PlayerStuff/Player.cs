@@ -23,8 +23,6 @@ namespace Spacegame.PlayerStuff
         public char playerChar;
         public string playerName;
 
-        public bool interactState = false;
-        
         public int speed { get; set; }
 
         public int health { get; set; }
@@ -34,8 +32,11 @@ namespace Spacegame.PlayerStuff
         // private bool shoot = false;
         // private bool bulletActive = false;
 
-        public Player(string playerName, int speed, int health, int exp, int level)
+        public Player(int px, int py, string playerName, int speed, int health, int exp, int level)
         {
+            this.px = px;
+            this.py = py;
+            
             this.speed = speed;
             this.health = health;
             this.exp = exp;
@@ -82,7 +83,11 @@ namespace Spacegame.PlayerStuff
                     break;
 
                 case ConsoleKey.E: // interact;
-                    interactState = !interactState;
+                    Global.interactState = !Global.interactState;
+                    break;
+                
+                case ConsoleKey.M:
+                    Global.menuActive = true;
                     break;
                 
                 // case ConsoleKey.Spacebar: // Shoot;
@@ -93,22 +98,9 @@ namespace Spacegame.PlayerStuff
         
         public bool Obstruction()
         {
-            if (dirY is -1 or 1)
+            if (Global.currentMap[py + dirY, px + dirX] == Global.wallChar)
             {
-                if (dirY == -1 && Global.currentMap[py - 1, px] is Global.wallChar or Global.closedDoorChar
-                    || dirY == 1 && Global.currentMap[py + 1, px] is Global.wallChar or Global.closedDoorChar)
-                {
-                    return true;
-                }
-            }
-
-            if (dirX is -1 or 1)
-            {
-                if (dirX == 1 && Global.currentMap[py, px + 1] is Global.wallChar or Global.closedDoorChar
-                    || dirX == -1 && Global.currentMap[py, px - 1] is Global.wallChar or Global.closedDoorChar)
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;
@@ -160,7 +152,7 @@ namespace Spacegame.PlayerStuff
         
         public void Update(double deltaTime)
         {
-            if (!interactState)
+            if (!Global.interactState)
             {
                 Movement();
                 // Shoot();
