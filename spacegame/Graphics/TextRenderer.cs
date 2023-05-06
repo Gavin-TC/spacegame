@@ -33,7 +33,7 @@ public class TextRenderer
     public void WriteText(int x, int y, string text)
     {
         // Janky way to do this, but the extra space clears any left over zeroes when subtracting a number...
-        y += Global.currentMap.GetLength(0);
+        y += screenHeight;
         Console.SetCursorPosition(x, y);
         Console.WriteLine(text + " ");
     }
