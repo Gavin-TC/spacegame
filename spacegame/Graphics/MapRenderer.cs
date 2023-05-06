@@ -10,40 +10,51 @@ namespace Spacegame.Graphics
         private int screenHeight; // Screen height in rows
         private Camera camera;
 
-        public MapRenderer(int screenWidth, int screenHeight)
+        public MapRenderer(Camera camera, int screenWidth, int screenHeight)
         {
             this.screenWidth = screenWidth;
             this.screenHeight = screenHeight;
+            this.camera = camera;
 
             characterBuffer = new char[screenHeight, screenWidth];
-            Clear();
         }
 
         public void Clear()
         {
             Console.SetCursorPosition(0, 0);
-            for (int i = 0; i < screenHeight; i++)
-            {
-                for (int j = 0; j < screenWidth; j++)
-                {
-                    characterBuffer[i, j] = ' ';
-                }
-            }
+            // for (int i = 0; i < screenHeight; i++)
+            // {
+            //     for (int j = 0; j < screenWidth; j++)
+            //     {
+            //         characterBuffer[i, j] = ' ';
+            //     }
+            // }
         }
 
         // Set a character at x and y coordinate
         public void DrawCharacter(int x, int y, char character)
         {
-            if (x >= 0 && x < screenWidth && y >= 0 && y < screenHeight)
+            if (x >= 0 && x < Global.currentMap.GetLength(0) && y >= 0 && y < Global.currentMap.GetLength(1))
             {
                 characterBuffer[y, x] = character;
             }
         }
 
-        // Draw the map using the camera
-        public void DrawMap(Camera camera)
+        public void AddCharacter(int worldX, int worldY, char character)
         {
-            this.camera = camera;
+            int screenX = worldX - camera.X + screenWidth / 2;
+            int screenY = worldY - camera.Y + screenHeight / 2;
+
+            if (screenX >= 0 && screenX < screenWidth &&
+                screenY >= 0 && screenY < screenHeight)
+            {
+                Global.currentMap[screenY, screenX] = character;
+            }
+        }
+
+        // Draw the map using the camera
+        public void DrawMap()
+        {
             for (int row = 0; row < camera.Height; row++)
             {
                 for (int col = 0; col < camera.Width; col++)
