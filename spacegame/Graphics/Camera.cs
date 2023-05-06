@@ -24,10 +24,10 @@ namespace Spacegame.Graphics
             MapHeight = mapHeight;
         }
 
-        public void Initialize(Player player)
+        public void Initialize(Player player, int x, int y)
         {
-            player.px = Width / 2;
-            player.py = Height / 2;
+            player.px = x;
+            player.py = y;
         }
 
         public void Update(Player player)
@@ -50,16 +50,18 @@ namespace Spacegame.Graphics
             Console.SetCursorPosition(0, 0);
             for (int y = 0; y < Height; y++)
             {
-                for (int x = 0; x < Width + 1; x++)
+                
+                for (int x = 0; x < Width; x++)
                 {
-                    int mapX = X + x;
-                    int mapY = Y + y;
+                    int mapX = Math.Max(0, Math.Min(MapWidth - 1, X + x));
+                    int mapY = Math.Max(0, Math.Min(MapHeight - 1, Y + y));
+
                     char mapChar = map[mapY, mapX];
 
                     // If the player is at the current mapX/Y, place the character there
                     if (player.px == mapX && player.py == mapY)
                     {
-                        Console.Write('@');
+                        Console.Write('＠');
                     }
                     else
                     {
