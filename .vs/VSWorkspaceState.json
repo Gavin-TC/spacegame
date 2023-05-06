@@ -1,0 +1,17 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\spacegame",
+    "\\spacegame\\Assets",
+    "\\spacegame\\Assets\\Maps",
+    "\\spacegame\\Graphics",
+    "\\spacegame\\Input",
+    "\\spacegame\\Menus",
+    "\\spacegame\\Objects",
+    "\\spacegame\\PlayerStuff",
+    "\\spacegame\\Quests",
+    "\\spacegame\\Utilities"
+  ],
+  "SelectedNode": "\\spacegame.sln",
+  "PreviewInSolutionExplorer": false
+}
