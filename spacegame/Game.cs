@@ -16,13 +16,11 @@ namespace Spacegame
         private MapRenderer _mapRenderer;
         private TextRenderer _textRenderer;
         private MapManager _mapManager;
+        private EntityRenderer _entityRenderer;
 
         private static string mapsDir = Path.Combine("Assets", "Maps");
         private static string stationsDir = Path.Combine(mapsDir, "Stations");
         private static string tutorialStation = Path.Combine(stationsDir, "tutorialstation.txt");
-
-        private string tutorialPath =
-            Path.Combine(Directory.GetCurrentDirectory(), mapsDir, stationsDir, tutorialStation);
 
         private Menu _menus;
         private InventoryMenu _inventoryMenu;
@@ -46,8 +44,8 @@ namespace Spacegame
         private int playerX;
         private int playerY;
 
-        private int dummyX = 5;
-        private int dummyY = 5;
+        private int dummyX = 110;
+        private int dummyY = 15;
 
         private bool goBack = false;
         private bool initialized = false;
@@ -57,14 +55,15 @@ namespace Spacegame
             // Perform any game initialization tasks here
             // such as setting up game objects, loading assets, etc.
             _mapManager = MapManager.Instance;
-            LoadMap("hello");
+            LoadMap("C:\\Users\\codma\\RiderProjects\\spacegame\\spacegame\\Assets\\Maps\\Stations\\tutorialstation2.txt");
             
             _screenWidth = Global.currentMap.GetLength(1);
             _screenHeight = Global.currentMap.GetLength(0);
             
             _cameraClass = new Camera(1, 1, _cameraWidth, _cameraHeight, _screenWidth, _screenHeight);
-            _mapRenderer = new MapRenderer(_cameraClass, _screenWidth, _screenHeight);
             _textRenderer = new TextRenderer(_textWidth, _textHeight);
+            
+            _entityRenderer = new EntityRenderer(_cameraClass, _screenWidth, _screenHeight, _screenWidth, _screenHeight);
 
             _menus = new Menu(this);
 
@@ -87,7 +86,8 @@ namespace Spacegame
 
         public void LoadMap(string mapName)
         {
-            _mapManager.ConvertMap("C:\\Users\\codma\\RiderProjects\\spacegame\\spacegame\\Assets\\Maps\\Stations\\tutorialstation2.txt");
+            // TODO: make this the absolute path instead of this path; this only works on my system
+            _mapManager.ConvertMap(mapName);
         }
 
         private void Update(double deltaTime)
@@ -108,25 +108,6 @@ namespace Spacegame
             // </summary>
             if (!Global.interactState) 
             {
-                if (!goBack)
-                {
-                    for (var i = 0; i < 3; i++)
-                    {
-                        dummyX += 1;
-                    }
-
-                    goBack = true;
-                }
-
-                if (goBack)
-                {
-                    for (var i = 0; i < 3; i++)
-                    {
-                        dummyX += -1;
-                    }
-
-                    goBack = false;
-                }
             }
         }
 
@@ -137,12 +118,15 @@ namespace Spacegame
             {
                 _menus.ShowMenu();
             }
-            
             _cameraClass.Draw(Global.currentMap, _player, _mapRenderer);
 
+            _entityRenderer.DrawBuffer();
+            _entityRenderer.DrawEntity(110, 15, 'D');
+            _entityRenderer.RenderEntityMap();
+            
             _textRenderer.WriteText(0, 0, "Player X: " + _player.px);
             _textRenderer.WriteText(0, 1, "Player Y: " + _player.py);
-            
+
             if (Global.interactState)
             {
                 _textRenderer.WriteText(_cameraWidth + 1, -_cameraHeight + 1, "Interact Mode!");

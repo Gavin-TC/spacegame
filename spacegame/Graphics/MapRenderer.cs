@@ -34,10 +34,7 @@ namespace Spacegame.Graphics
         // Set a character at x and y coordinate
         public void DrawCharacter(int x, int y, char character)
         {
-            if (x >= 0 && x < Global.currentMap.GetLength(0) && y >= 0 && y < Global.currentMap.GetLength(1))
-            {
-                characterBuffer[y, x] = character;
-            }
+            
         }
 
         public void AddCharacter(int worldX, int worldY, char character)
@@ -55,22 +52,7 @@ namespace Spacegame.Graphics
         // Draw the map using the camera
         public void DrawMap()
         {
-            for (int row = 0; row < camera.Height; row++)
-            {
-                for (int col = 0; col < camera.Width; col++)
-                {
-                    int mapX = camera.X + col;
-                    int mapY = camera.Y + row;
-
-                    // Only draw characters that are within the bounds of the map
-                    if (mapX >= 0 && mapX < Global.currentMap.GetLength(1) &&
-                        mapY >= 0 && mapY < Global.currentMap.GetLength(0))
-                    {
-                        char tileChar = Global.currentMap[mapY, mapX];
-                        DrawCharacter(col, row, tileChar);
-                    }
-                }
-            }
+            
         }
 
         public void RenderScreen()
