@@ -43,7 +43,7 @@ namespace Spacegame.Graphics
             Y = Math.Max(0, Math.Min(MapHeight - Height, Y));
         }
 
-        public void Draw(char[,] map, Player player, MapRenderer mapRenderer)
+        public void Draw(char[,] map, Player player, EntityRenderer entityRenderer)
         {
             // Draw the part of the map that's within the camera's view
 

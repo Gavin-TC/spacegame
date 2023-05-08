@@ -1,4 +1,5 @@
-﻿using Spacegame.Utilities;
+﻿using Spacegame.Entities;
+using Spacegame.Utilities;
 
 namespace Spacegame.Graphics
 {
@@ -16,16 +17,42 @@ namespace Spacegame.Graphics
             this.bufferWidth = bufferWidth;
             this.bufferHeight = bufferHeight;
 
-            buffer = new char[this.bufferWidth, this.bufferHeight];
+            buffer = new char[this.bufferHeight, this.bufferWidth];
         }
 
         public void DrawEntity(int x, int y, char character)
         {
-            if (x >= 0 && x < bufferHeight && y >= 0 && y < bufferWidth)
+            buffer[y, x] = character;
+        }
+        
+        public void RenderEntities(Camera camera, EntityRenderer entityRenderer, List<Entity> entities)
+        {
+            // Get the position of the camera
+            int cameraX = camera.X;
+            int cameraY = camera.Y;
+
+            // Determine the boundaries of the screen based on the camera position and the size of the screen
+            int screenWidth = entityRenderer.bufferWidth;
+            int screenHeight = entityRenderer.bufferHeight;
+            int screenLeft = cameraX - screenWidth / 2;
+            int screenRight = cameraX + screenWidth / 2;
+            int screenTop = cameraY - screenHeight / 2;
+            int screenBottom = cameraY + screenHeight / 2;
+
+            // Iterate over the list of entities and check if their position is within the boundaries of the screen
+            foreach (Entity entity in entities)
             {
-                buffer[y, x] = character;
+                int entityX = entity.x;
+                int entityY = entity.y;
+
+                if (entityX >= screenLeft && entityX <= screenRight && entityY >= screenTop && entityY <= screenBottom)
+                {
+                    // For each entity that is within the screen boundaries, call its Draw method with the EntityRenderer object as a parameter
+                    entity.Draw(entityRenderer);
+                }
             }
         }
+
 
         public void RenderEntityMap()
         {
@@ -36,6 +63,17 @@ namespace Spacegame.Graphics
                     Console.Write(buffer[rows, cols]);
                 }
                 Console.WriteLine();
+            }
+        }
+        
+        public void ClearBuffer()
+        {
+            for (int y = 0; y < bufferHeight; y++)
+            {
+                for (int x = 0; x < bufferWidth; x++)
+                {
+                    buffer[y, x] = ' ';
+                }
             }
         }
 

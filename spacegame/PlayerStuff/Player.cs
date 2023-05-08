@@ -1,4 +1,5 @@
-﻿using Spacegame.Input;
+﻿using System.Reflection;
+using Spacegame.Input;
 using Spacegame.Quests;
 using Spacegame.Utilities;
 
@@ -32,8 +33,9 @@ namespace Spacegame.PlayerStuff
         // private bool shoot = false;
         // private bool bulletActive = false;
 
-        public Player(int px, int py, string playerName, int speed, int health, int exp, int level)
+        public void Initialize(int px, int py, int speed, int health, int exp, int level, string playerName)
         {
+            
             this.px = px;
             this.py = py;
             
@@ -42,12 +44,6 @@ namespace Spacegame.PlayerStuff
             this.exp = exp;
             this.level = level;
             this.playerName = playerName;
-        }
-        
-        public void Initialize()
-        {
-            px = 5;
-            py = 5;
 
             _handleInput = new HandleInput();
             _handleInput.InputEvent += OnInput;
@@ -105,8 +101,6 @@ namespace Spacegame.PlayerStuff
 
             return false;
         }
-        
-        // _mapRenderer.DrawCharacter(playerX, playerY, '@'); // Draw player character at current position
 
         public void Movement()
         {
@@ -144,18 +138,12 @@ namespace Spacegame.PlayerStuff
              }
          }
         */
-
-        public void Render()
-        {
-            Global.currentMap[py, px] = playerChar;
-        }
         
-        public void Update(double deltaTime)
+        public void Update()
         {
             if (!Global.interactState)
             {
                 Movement();
-                // Shoot();
             }
             dirX = 0;
             dirY = 0;

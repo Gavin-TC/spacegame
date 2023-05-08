@@ -34,7 +34,7 @@ public class MapManager
                     if (line[x] == 's')
                     {
                         var random = new Random();
-                        var randNum = random.Next(0, 15);
+                        var randNum = random.Next(0, random.Next(8, 20));
 
                         switch (randNum)
                         {
@@ -55,8 +55,9 @@ public class MapManager
                                         tile = '\'';
                                         break;
                                 }
+
                                 break;
-                            
+
                             default:
                                 tile = ' ';
                                 break;
@@ -67,10 +68,9 @@ public class MapManager
                         tile = line[x];
                     }
                 }
+
                 map[y, x] = tile;
-                //Console.Write(map[y, x]);
             }
-            //Console.WriteLine();
         }
 
         Global.currentMap = map;
@@ -86,7 +86,8 @@ public class MapManager
         if (maps.ContainsKey(mapName))
         {
             currentMap = maps[mapName];
-        } else
+        }
+        else
         {
             throw new Exception("This map does not exist!");
         }
